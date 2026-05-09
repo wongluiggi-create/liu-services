@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAppContext } from '../../App';
 
@@ -129,6 +129,87 @@ export default function SimulatorModule() {
             ? '¡Superaste el punto de equilibrio! Tu negocio es rentable con este mix.'
             : `Te faltan ${formatCurrency(Math.abs(balance))} para cubrir todos los costos.`}
         </p>
+      </div>
+
+      {/* ── Meta de Servicios del Mes ── */}
+      <div className="bg-[#1C1C1C] rounded-xl border border-[#7F54F5]/20 overflow-hidden">
+        <div className="px-5 py-4 border-b border-[#7F54F5]/20">
+          <h3 className="text-sm font-semibold text-gray-100">Meta de Servicios del Mes</h3>
+          <p className="text-xs text-gray-500 mt-0.5">
+            Servicios necesarios para cubrir todos los gastos. Ajusta las cantidades en el Escenario 2 para ver tu avance.
+          </p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[#7F54F5]/10">
+                <th className="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-gray-500">Servicio</th>
+                <th className="px-4 py-3 text-center text-[10px] font-bold uppercase tracking-wider text-gray-500">Meta</th>
+                <th className="px-4 py-3 text-center text-[10px] font-bold uppercase tracking-wider text-gray-500">Llevo</th>
+                <th className="px-4 py-3 text-center text-[10px] font-bold uppercase tracking-wider text-gray-500">Faltan</th>
+                <th className="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 min-w-[140px]">Progreso</th>
+              </tr>
+            </thead>
+            <tbody>
+              {services.map(service => {
+                const meta = service.price > 0 ? Math.ceil(totalCosts / service.price) : null;
+                const llevo = mix[service.id] || 0;
+                const faltan = meta !== null ? Math.max(0, meta - llevo) : null;
+                const pct = meta !== null && meta > 0 ? Math.min((llevo / meta) * 100, 100) : 0;
+                const done = faltan === 0;
+
+                return (
+                  <tr key={service.id} className="border-b border-[#7F54F5]/10 hover:bg-white/5 transition-colors">
+                    <td className="px-5 py-3.5">
+                      <p className="text-gray-200 font-medium truncate max-w-[180px]">{service.name}</p>
+                      <p className="text-[11px] text-gray-600 mt-0.5">{formatCurrency(service.price)} / unidad</p>
+                    </td>
+                    <td className="px-4 py-3.5 text-center">
+                      <span className="text-xl font-black text-[#FFCC00] tabular-nums">
+                        {meta !== null ? meta : '∞'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3.5 text-center">
+                      <span className={`text-xl font-black tabular-nums ${llevo > 0 ? 'text-gray-100' : 'text-gray-600'}`}>
+                        {llevo}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3.5 text-center">
+                      {done ? (
+                        <CheckCircle2 size={20} className="text-emerald-400 mx-auto" />
+                      ) : (
+                        <span className="text-xl font-black text-red-400 tabular-nums">
+                          {faltan !== null ? faltan : '∞'}
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 h-2.5 bg-[#0D0D0D] rounded-full overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-500 ${done ? 'bg-emerald-500' : 'bg-[#FFCC00]'}`}
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                        <span className={`text-[11px] font-bold tabular-nums w-9 text-right ${done ? 'text-emerald-400' : 'text-gray-400'}`}>
+                          {pct.toFixed(0)}%
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div className="px-5 py-3 border-t border-[#7F54F5]/10 bg-[#0D0D0D]/40 flex items-center justify-between">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-gray-600">
+            Progreso global del mix
+          </span>
+          <span className={`text-xs font-bold tabular-nums ${isProfitable ? 'text-emerald-400' : 'text-[#FFCC00]'}`}>
+            {progressPercentage.toFixed(1)}% de la meta cubierta
+          </span>
+        </div>
       </div>
 
       {/* ── Scenario cards ── */}

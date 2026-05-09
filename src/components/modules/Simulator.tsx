@@ -29,8 +29,8 @@ export default function SimulatorModule() {
   if (services.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-4 p-6">
-        <div className="w-16 h-16 rounded-full bg-[#1C1C1C] border border-[#7F54F5]/20 flex items-center justify-center">
-          <AlertTriangle size={24} className="text-[#FD8000]" />
+        <div className="w-16 h-16 rounded-full bg-tech-card border border-tech-purple/20 flex items-center justify-center">
+          <AlertTriangle size={24} className="text-tech-orange" />
         </div>
         <div className="text-center">
           <p className="text-gray-300 font-medium">Sin servicios para simular</p>
@@ -40,7 +40,7 @@ export default function SimulatorModule() {
         </div>
         <Link
           to="/services"
-          className="px-5 py-2 bg-[#FD8000] text-white text-sm font-semibold rounded-lg hover:bg-[#E57200] transition-colors"
+          className="px-5 py-2 bg-tech-orange text-white text-sm font-semibold rounded-lg hover:bg-[#E57200] transition-colors"
         >
           Ir a Servicios
         </Link>
@@ -68,7 +68,7 @@ export default function SimulatorModule() {
         </div>
 
         {/* 2. Ingreso Proyectado */}
-        <div className="bg-white rounded-xl border-l-4 border-[#FFCC00] p-5 shadow-sm">
+        <div className="bg-white rounded-xl border-l-4 border-liu p-5 shadow-sm">
           <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">
             Ingreso Proyectado
           </p>
@@ -119,7 +119,7 @@ export default function SimulatorModule() {
         <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
           <div
             className={`h-full rounded-full transition-all duration-500 ${
-              isProfitable ? 'bg-emerald-500' : 'bg-[#FFCC00]'
+              isProfitable ? 'bg-emerald-500' : 'bg-liu'
             }`}
             style={{ width: `${progressPercentage}%` }}
           />
@@ -132,8 +132,8 @@ export default function SimulatorModule() {
       </div>
 
       {/* ── Meta de Servicios del Mes ── */}
-      <div className="bg-[#1C1C1C] rounded-xl border border-[#7F54F5]/20 overflow-hidden">
-        <div className="px-5 py-4 border-b border-[#7F54F5]/20">
+      <div className="bg-tech-card rounded-xl border border-tech-purple/20 overflow-hidden">
+        <div className="px-5 py-4 border-b border-tech-purple/20">
           <h3 className="text-sm font-semibold text-gray-100">Meta de Servicios del Mes</h3>
           <p className="text-xs text-gray-500 mt-0.5">
             Servicios necesarios para cubrir todos los gastos. Ajusta las cantidades en el Escenario 2 para ver tu avance.
@@ -142,12 +142,12 @@ export default function SimulatorModule() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#7F54F5]/10">
+              <tr className="border-b border-tech-purple/10">
                 <th className="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-gray-500">Servicio</th>
                 <th className="px-4 py-3 text-center text-[10px] font-bold uppercase tracking-wider text-gray-500">Meta</th>
                 <th className="px-4 py-3 text-center text-[10px] font-bold uppercase tracking-wider text-gray-500">Llevo</th>
                 <th className="px-4 py-3 text-center text-[10px] font-bold uppercase tracking-wider text-gray-500">Faltan</th>
-                <th className="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 min-w-[140px]">Progreso</th>
+                <th className="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 min-w-35">Progreso</th>
               </tr>
             </thead>
             <tbody>
@@ -159,13 +159,13 @@ export default function SimulatorModule() {
                 const done = faltan === 0;
 
                 return (
-                  <tr key={service.id} className="border-b border-[#7F54F5]/10 hover:bg-white/5 transition-colors">
+                  <tr key={service.id} className="border-b border-tech-purple/10 hover:bg-white/5 transition-colors">
                     <td className="px-5 py-3.5">
-                      <p className="text-gray-200 font-medium truncate max-w-[180px]">{service.name}</p>
+                      <p className="text-gray-200 font-medium truncate max-w-45">{service.name}</p>
                       <p className="text-[11px] text-gray-600 mt-0.5">{formatCurrency(service.price)} / unidad</p>
                     </td>
                     <td className="px-4 py-3.5 text-center">
-                      <span className="text-xl font-black text-[#FFCC00] tabular-nums">
+                      <span className="text-xl font-black text-liu tabular-nums">
                         {meta !== null ? meta : '∞'}
                       </span>
                     </td>
@@ -185,9 +185,9 @@ export default function SimulatorModule() {
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2">
-                        <div className="flex-1 h-2.5 bg-[#0D0D0D] rounded-full overflow-hidden">
+                        <div className="flex-1 h-2.5 bg-tech-deep rounded-full overflow-hidden">
                           <div
-                            className={`h-full rounded-full transition-all duration-500 ${done ? 'bg-emerald-500' : 'bg-[#FFCC00]'}`}
+                            className={`h-full rounded-full transition-all duration-500 ${done ? 'bg-emerald-500' : 'bg-liu'}`}
                             style={{ width: `${pct}%` }}
                           />
                         </div>
@@ -202,11 +202,11 @@ export default function SimulatorModule() {
             </tbody>
           </table>
         </div>
-        <div className="px-5 py-3 border-t border-[#7F54F5]/10 bg-[#0D0D0D]/40 flex items-center justify-between">
+        <div className="px-5 py-3 border-t border-tech-purple/10 bg-tech-deep/40 flex items-center justify-between">
           <span className="text-[10px] font-bold uppercase tracking-wider text-gray-600">
             Progreso global del mix
           </span>
-          <span className={`text-xs font-bold tabular-nums ${isProfitable ? 'text-emerald-400' : 'text-[#FFCC00]'}`}>
+          <span className={`text-xs font-bold tabular-nums ${isProfitable ? 'text-emerald-400' : 'text-liu'}`}>
             {progressPercentage.toFixed(1)}% de la meta cubierta
           </span>
         </div>
@@ -216,14 +216,14 @@ export default function SimulatorModule() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         {/* Escenario 1: Venta Única */}
-        <div className="bg-[#1C1C1C] rounded-xl border border-[#7F54F5]/20 flex flex-col overflow-hidden">
-          <div className="px-5 py-4 border-b border-[#7F54F5]/20 shrink-0">
+        <div className="bg-tech-card rounded-xl border border-tech-purple/20 flex flex-col overflow-hidden">
+          <div className="px-5 py-4 border-b border-tech-purple/20 shrink-0">
             <h3 className="text-sm font-semibold text-gray-100">Escenario 1 — Venta Única</h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Unidades de un solo servicio necesarias para cubrir todos los costos
             </p>
           </div>
-          <div className="divide-y divide-[#7F54F5]/10">
+          <div className="divide-y divide-tech-purple/10">
             {services.map(service => {
               const units = service.price > 0 ? Math.ceil(totalCosts / service.price) : null;
               return (
@@ -238,7 +238,7 @@ export default function SimulatorModule() {
                     </p>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="text-3xl font-black text-[#FFCC00] tabular-nums leading-none">
+                    <span className="text-3xl font-black text-liu tabular-nums leading-none">
                       {units !== null ? units.toLocaleString('es-CL') : '∞'}
                     </span>
                     <p className="text-[10px] text-gray-600 mt-0.5 uppercase tracking-wide">
@@ -252,14 +252,14 @@ export default function SimulatorModule() {
         </div>
 
         {/* Escenario 2: Mix de Ventas */}
-        <div className="bg-[#1C1C1C] rounded-xl border border-[#FFCC00]/40 flex flex-col overflow-hidden">
-          <div className="px-5 py-4 border-b border-[#FFCC00]/20 shrink-0">
+        <div className="bg-tech-card rounded-xl border border-liu/40 flex flex-col overflow-hidden">
+          <div className="px-5 py-4 border-b border-liu/20 shrink-0">
             <h3 className="text-sm font-semibold text-gray-100">Escenario 2 — Mix de Ventas</h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Ajusta cantidades para simular tu composición de ventas mensual
             </p>
           </div>
-          <div className="divide-y divide-[#7F54F5]/10">
+          <div className="divide-y divide-tech-purple/10">
             {services.map(service => {
               const qty = mix[service.id] || 0;
               const rowRevenue = service.price * qty;
@@ -282,7 +282,7 @@ export default function SimulatorModule() {
                     value={qty || ''}
                     onChange={e => updateMix(service.id, parseInt(e.target.value) || 0)}
                     placeholder="0"
-                    className="w-20 h-9 bg-[#111111] border border-[#7F54F5]/30 text-gray-100 rounded-lg px-3 text-sm text-right outline-none focus:ring-2 focus:ring-[#FFCC00]/50 focus:border-[#FFCC00] transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    className="w-20 h-9 bg-[#111111] border border-tech-purple/30 text-gray-100 rounded-lg px-3 text-sm text-right outline-none focus:ring-2 focus:ring-liu/50 focus:border-liu transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                 </div>
               );
@@ -290,13 +290,13 @@ export default function SimulatorModule() {
           </div>
 
           {/* Mix footer */}
-          <div className="px-5 py-3 border-t border-[#FFCC00]/20 flex items-center justify-between shrink-0 mt-auto">
+          <div className="px-5 py-3 border-t border-liu/20 flex items-center justify-between shrink-0 mt-auto">
             <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500">
               Total proyectado
             </span>
             <span
               className={`text-sm font-bold tabular-nums ${
-                isProfitable ? 'text-emerald-400' : 'text-[#FFCC00]'
+                isProfitable ? 'text-emerald-400' : 'text-liu'
               }`}
             >
               {formatCurrency(projectedRevenue)}

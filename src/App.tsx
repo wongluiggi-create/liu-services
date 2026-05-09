@@ -322,7 +322,9 @@ export default function App() {
 
       {/* ── Main ── */}
       <main className="flex-1 overflow-y-auto">
-        <Outlet context={outletContext} />
+        <div className="max-w-7xl mx-auto w-full">
+          <Outlet context={outletContext} />
+        </div>
       </main>
 
       {/* ── Settings drawer backdrop ── */}

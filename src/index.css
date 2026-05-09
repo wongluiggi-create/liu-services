@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --color-liu: #FFCC00;
+  --color-liu-text: #111111;
+  --color-tech-bg: #111111;
+  --color-tech-card: #1C1C1C;
+  --color-tech-deep: #0D0D0D;
+  --color-tech-purple: #7F54F5;
+  --color-tech-orange: #FD8000;
+  --font-sans: 'Inter', sans-serif;
+}
+
+body { background-color: #111111; color: #F0F0F0; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

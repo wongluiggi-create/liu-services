@@ -57,66 +57,66 @@ export default function SimulatorModule() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
         {/* 1. Meta */}
-        <div className="bg-white rounded-xl border-l-4 border-gray-800 p-5 shadow-sm">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">
+        <div className="bg-tech-card rounded-xl border border-tech-purple/20 border-l-4 border-l-tech-purple p-5">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
             Meta (Costos Totales)
           </p>
-          <p className="text-2xl font-bold text-gray-900 mt-1 tabular-nums">
+          <p className="text-2xl font-bold text-gray-100 mt-1 tabular-nums">
             {formatCurrency(totalCosts)}
           </p>
-          <p className="text-xs text-gray-400 mt-1">a cubrir este mes</p>
+          <p className="text-xs text-gray-500 mt-1">a cubrir este mes</p>
         </div>
 
         {/* 2. Ingreso Proyectado */}
-        <div className="bg-white rounded-xl border-l-4 border-liu p-5 shadow-sm">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">
+        <div className="bg-tech-card rounded-xl border border-tech-purple/20 border-l-4 border-l-liu p-5">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
             Ingreso Proyectado
           </p>
-          <p className="text-2xl font-bold text-gray-900 mt-1 tabular-nums">
+          <p className="text-2xl font-bold text-liu mt-1 tabular-nums">
             {formatCurrency(projectedRevenue)}
           </p>
-          <p className="text-xs text-gray-400 mt-1">según mix actual</p>
+          <p className="text-xs text-gray-500 mt-1">según mix actual</p>
         </div>
 
         {/* 3. Utilidad / Faltante */}
         {isProfitable ? (
-          <div className="bg-emerald-50 rounded-xl border-l-4 border-emerald-500 p-5 shadow-sm">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-600/70">
+          <div className="bg-tech-card rounded-xl border border-tech-purple/20 border-l-4 border-l-emerald-500 p-5">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-400/70">
               Utilidad Estimada
             </p>
-            <p className="text-2xl font-bold text-emerald-600 mt-1 tabular-nums">
+            <p className="text-2xl font-bold text-emerald-400 mt-1 tabular-nums">
               {formatCurrency(balance)}
             </p>
-            <p className="text-xs text-emerald-500/70 mt-1">sobre el punto de equilibrio</p>
+            <p className="text-xs text-emerald-400/60 mt-1">sobre el punto de equilibrio</p>
           </div>
         ) : (
-          <div className="bg-red-50 rounded-xl border-l-4 border-red-500 p-5 shadow-sm">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-red-600/70">
+          <div className="bg-tech-card rounded-xl border border-tech-purple/20 border-l-4 border-l-red-500 p-5">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-red-400/70">
               Faltante para Equilibrio
             </p>
-            <p className="text-2xl font-bold text-red-600 mt-1 tabular-nums">
+            <p className="text-2xl font-bold text-red-400 mt-1 tabular-nums">
               {formatCurrency(Math.abs(balance))}
             </p>
-            <p className="text-xs text-red-500/70 mt-1">bajo el punto de equilibrio</p>
+            <p className="text-xs text-red-400/60 mt-1">bajo el punto de equilibrio</p>
           </div>
         )}
       </div>
 
       {/* ── Progress bar ── */}
-      <div className="bg-white rounded-xl p-5 shadow-sm">
+      <div className="bg-tech-card rounded-xl border border-tech-purple/20 p-5">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-sm font-medium text-gray-700">
+          <span className="text-sm font-medium text-gray-300">
             Progreso hacia el Punto de Equilibrio
           </span>
           <span
             className={`text-sm font-bold tabular-nums ${
-              isProfitable ? 'text-emerald-600' : 'text-gray-700'
+              isProfitable ? 'text-emerald-400' : 'text-gray-300'
             }`}
           >
             {progressPercentage.toFixed(1)}%
           </span>
         </div>
-        <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
+        <div className="h-4 bg-tech-deep rounded-full overflow-hidden">
           <div
             className={`h-full rounded-full transition-all duration-500 ${
               isProfitable ? 'bg-emerald-500' : 'bg-liu'
@@ -124,7 +124,7 @@ export default function SimulatorModule() {
             style={{ width: `${progressPercentage}%` }}
           />
         </div>
-        <p className={`text-xs mt-2 ${isProfitable ? 'text-emerald-600 font-medium' : 'text-gray-500'}`}>
+        <p className={`text-xs mt-2 ${isProfitable ? 'text-emerald-400 font-medium' : 'text-gray-500'}`}>
           {isProfitable
             ? '¡Superaste el punto de equilibrio! Tu negocio es rentable con este mix.'
             : `Te faltan ${formatCurrency(Math.abs(balance))} para cubrir todos los costos.`}

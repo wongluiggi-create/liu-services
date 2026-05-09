@@ -9,7 +9,12 @@
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(git branch *)",
-      "Bash(git remote *)"
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(winget install *)",
+      "Bash(where gh *)",
+      "PowerShell(cmdkey *)",
+      "Bash(npx gh-pages *)"
     ]
   }
 }

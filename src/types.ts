@@ -38,14 +38,25 @@ export interface AgencyService {
   estimatedHours?: number;
 }
 
+export type ClientStatus =
+  | 'info'
+  | 'interested'
+  | 'active'
+  | 'proposal'
+  | 'unhappy'
+  | 'inactive';
+
 export interface AgencyClient {
   id: string;
   name: string;
+  contactName?: string;
   email: string;
   phone?: string;
   company?: string;
   rut?: string;
   address?: string;
+  status?: ClientStatus;
+  lastWhatsAppContact?: string;
   createdAt: string;
 }
 

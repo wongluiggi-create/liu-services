@@ -16,7 +16,10 @@
       "PowerShell(cmdkey *)",
       "Bash(npx gh-pages *)",
       "Bash(findstr /i \"deploy\\\\|gh-pages\\\\|homepage\")",
-      "Bash(gh repo *)"
+      "Bash(gh repo *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\wongl\\\\Documents\\\\liu-services\" -Recurse -Directory)",
+      "Bash(Select-Object -First 30)",
+      "Bash(Format-List FullName)"
     ]
   }
 }

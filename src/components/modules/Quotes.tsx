@@ -77,7 +77,7 @@ const freshForm = (): QuoteForm => ({
 });
 
 const inputCls =
-  'h-10 w-full bg-[#111111] border border-[#7F54F5]/30 text-gray-100 rounded-lg px-3 text-sm outline-none placeholder:text-gray-600 focus:ring-2 focus:ring-[#FFCC00]/50 focus:border-[#FFCC00] transition-colors';
+  'h-10 w-full bg-[#111111] border border-tech-purple/30 text-gray-100 rounded-lg px-3 text-sm outline-none placeholder:text-gray-600 focus:ring-2 focus:ring-liu/50 focus:border-liu transition-colors';
 
 const labelCls = 'text-[10px] font-bold uppercase tracking-wider text-gray-400';
 
@@ -251,14 +251,14 @@ export default function QuotesModule() {
     <div className="grid lg:grid-cols-[1fr_2fr] min-h-full">
 
       {/* ══ LEFT PANEL — Quote list ══ */}
-      <div className="border-b lg:border-b-0 lg:border-r border-[#7F54F5]/20 flex flex-col">
-        <div className="px-4 py-3 border-b border-[#7F54F5]/20 flex items-center justify-between shrink-0">
+      <div className="border-b lg:border-b-0 lg:border-r border-tech-purple/20 flex flex-col">
+        <div className="px-4 py-3 border-b border-tech-purple/20 flex items-center justify-between shrink-0">
           <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
             Cotizaciones ({quotes.length})
           </span>
           <button
             onClick={() => setForm(freshForm())}
-            className="h-7 px-3 rounded-lg bg-[#1C1C1C] border border-[#7F54F5]/30 text-xs text-gray-300 hover:text-gray-100 hover:border-[#7F54F5]/60 transition-colors flex items-center gap-1"
+            className="h-7 px-3 rounded-lg bg-tech-card border border-tech-purple/30 text-xs text-gray-300 hover:text-gray-100 hover:border-tech-purple/60 transition-colors flex items-center gap-1"
           >
             <Plus size={11} /> Nueva
           </button>
@@ -283,8 +283,8 @@ export default function QuotesModule() {
                 onClick={() => handleLoadQuote(quote)}
                 className={`p-3 rounded-lg cursor-pointer border transition-colors ${
                   isActive
-                    ? 'bg-[#FD8000]/10 border-[#FD8000]/30'
-                    : 'bg-[#1C1C1C] border-[#7F54F5]/20 hover:border-[#7F54F5]/50'
+                    ? 'bg-tech-orange/10 border-tech-orange/30'
+                    : 'bg-tech-card border-tech-purple/20 hover:border-tech-purple/50'
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
@@ -321,7 +321,7 @@ export default function QuotesModule() {
                 </div>
                 <div className="mt-2 flex items-center justify-between">
                   <span className="text-[10px] text-gray-600 font-mono">{quote.number}</span>
-                  <span className="text-sm font-bold text-[#FFCC00] tabular-nums">
+                  <span className="text-sm font-bold text-liu tabular-nums">
                     {formatCurrency(quote.total)}
                   </span>
                 </div>
@@ -335,7 +335,7 @@ export default function QuotesModule() {
       <div className="flex flex-col">
 
         {/* ── Form area ── */}
-        <div className="p-4 md:p-6 flex flex-col gap-6 border-b border-[#7F54F5]/20">
+        <div className="p-4 md:p-6 flex flex-col gap-6 border-b border-tech-purple/20">
 
           {/* Form header with status */}
           <div className="flex items-center justify-between">
@@ -345,7 +345,7 @@ export default function QuotesModule() {
             <select
               value={form.status}
               onChange={e => setField('status', e.target.value as QuoteStatus)}
-              className="h-8 text-xs bg-[#111111] border border-[#7F54F5]/30 text-gray-300 rounded-lg px-2 outline-none focus:border-[#FFCC00] transition-colors"
+              className="h-8 text-xs bg-[#111111] border border-tech-purple/30 text-gray-300 rounded-lg px-2 outline-none focus:border-liu transition-colors"
             >
               <option value="draft">Borrador</option>
               <option value="sent">Enviado</option>
@@ -374,7 +374,7 @@ export default function QuotesModule() {
 
               {/* Dropdown */}
               {form.showClientDropdown && filteredClients.length > 0 && (
-                <div className="absolute top-full left-0 right-0 z-20 mt-1 bg-[#1C1C1C] border border-[#7F54F5]/30 rounded-lg shadow-xl overflow-hidden">
+                <div className="absolute top-full left-0 right-0 z-20 mt-1 bg-tech-card border border-tech-purple/30 rounded-lg shadow-xl overflow-hidden">
                   {filteredClients.map(c => (
                     <button
                       key={c.id}
@@ -389,11 +389,11 @@ export default function QuotesModule() {
               )}
 
               {form.showClientDropdown && form.clientSearch.trim() && filteredClients.length === 0 && (
-                <div className="absolute top-full left-0 right-0 z-20 mt-1 bg-[#1C1C1C] border border-[#7F54F5]/30 rounded-lg shadow-xl p-3">
+                <div className="absolute top-full left-0 right-0 z-20 mt-1 bg-tech-card border border-tech-purple/30 rounded-lg shadow-xl p-3">
                   <p className="text-xs text-gray-500">Sin resultados. </p>
                   <button
                     onMouseDown={() => navigate('/clients')}
-                    className="text-xs text-[#FD8000] hover:underline mt-0.5"
+                    className="text-xs text-tech-orange hover:underline mt-0.5"
                   >
                     + Crear cliente
                   </button>
@@ -414,7 +414,7 @@ export default function QuotesModule() {
                     type="date"
                     value={form[key]}
                     onChange={e => setField(key, e.target.value)}
-                    className={inputCls + ' [color-scheme:dark]'}
+                    className={inputCls + ' scheme-dark'}
                   />
                 </div>
               ))}
@@ -429,7 +429,7 @@ export default function QuotesModule() {
             <select
               value=""
               onChange={e => addServiceItem(e.target.value)}
-              className="h-10 w-full bg-[#111111] border border-[#7F54F5]/30 text-gray-400 rounded-lg px-3 text-sm outline-none focus:ring-2 focus:ring-[#FFCC00]/50 focus:border-[#FFCC00] transition-colors"
+              className="h-10 w-full bg-[#111111] border border-tech-purple/30 text-gray-400 rounded-lg px-3 text-sm outline-none focus:ring-2 focus:ring-liu/50 focus:border-liu transition-colors"
             >
               <option value="" disabled>+ Agregar servicio del catálogo…</option>
               {services.map(s => (
@@ -441,10 +441,10 @@ export default function QuotesModule() {
 
             {/* Items table */}
             {form.items.length > 0 && (
-              <div className="rounded-lg border border-[#7F54F5]/20 overflow-hidden">
+              <div className="rounded-lg border border-tech-purple/20 overflow-hidden">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="border-b border-[#7F54F5]/10 bg-[#0D0D0D]/40">
+                    <tr className="border-b border-tech-purple/10 bg-tech-deep/40">
                       <th className="text-left px-3 py-2 text-gray-500 font-medium">Descripción</th>
                       <th className="text-right px-3 py-2 text-gray-500 font-medium w-28">Precio Unit.</th>
                       <th className="text-right px-3 py-2 text-gray-500 font-medium w-14">Cant.</th>
@@ -454,18 +454,18 @@ export default function QuotesModule() {
                   </thead>
                   <tbody>
                     {form.items.map(item => (
-                      <tr key={item.localId} className="border-b border-[#7F54F5]/10 last:border-0">
+                      <tr key={item.localId} className="border-b border-tech-purple/10 last:border-0">
                         <td className="px-3 py-2">
                           <input
                             value={item.name}
                             onChange={e => updateItem(item.localId, 'name', e.target.value)}
-                            className="w-full bg-transparent text-gray-200 text-xs outline-none border-b border-transparent focus:border-[#FFCC00]/50 transition-colors"
+                            className="w-full bg-transparent text-gray-200 text-xs outline-none border-b border-transparent focus:border-liu/50 transition-colors"
                           />
                           <input
                             value={item.description}
                             onChange={e => updateItem(item.localId, 'description', e.target.value)}
                             placeholder="Descripción…"
-                            className="w-full bg-transparent text-gray-500 text-[11px] outline-none border-b border-transparent focus:border-[#FFCC00]/30 transition-colors mt-0.5 placeholder:text-gray-700"
+                            className="w-full bg-transparent text-gray-500 text-[11px] outline-none border-b border-transparent focus:border-liu/30 transition-colors mt-0.5 placeholder:text-gray-700"
                           />
                         </td>
                         <td className="px-3 py-2 text-right">
@@ -474,7 +474,7 @@ export default function QuotesModule() {
                             min={0}
                             value={item.price}
                             onChange={e => updateItem(item.localId, 'price', parseFloat(e.target.value) || 0)}
-                            className="w-full bg-transparent text-gray-200 text-xs text-right outline-none border-b border-transparent focus:border-[#FFCC00]/50 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            className="w-full bg-transparent text-gray-200 text-xs text-right outline-none border-b border-transparent focus:border-liu/50 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           />
                         </td>
                         <td className="px-3 py-2 text-right">
@@ -483,10 +483,10 @@ export default function QuotesModule() {
                             min={1}
                             value={item.quantity}
                             onChange={e => updateItem(item.localId, 'quantity', parseInt(e.target.value) || 1)}
-                            className="w-10 bg-transparent text-gray-200 text-xs text-right outline-none border-b border-transparent focus:border-[#FFCC00]/50 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            className="w-10 bg-transparent text-gray-200 text-xs text-right outline-none border-b border-transparent focus:border-liu/50 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           />
                         </td>
-                        <td className="px-3 py-2 text-right text-[#FFCC00] font-bold tabular-nums">
+                        <td className="px-3 py-2 text-right text-liu font-bold tabular-nums">
                           {formatCurrency(item.price * item.quantity)}
                         </td>
                         <td className="pr-2 py-2">
@@ -501,7 +501,7 @@ export default function QuotesModule() {
                     ))}
                   </tbody>
                   <tfoot>
-                    <tr className="border-t border-[#7F54F5]/20 bg-[#0D0D0D]/40">
+                    <tr className="border-t border-tech-purple/20 bg-tech-deep/40">
                       <td colSpan={3} className="px-3 py-2 text-gray-500 text-[10px] font-bold uppercase tracking-wider">
                         Subtotal
                       </td>
@@ -525,7 +525,7 @@ export default function QuotesModule() {
                 const tmpl = termTemplates.find(t => t.id === e.target.value);
                 setForm(f => ({ ...f, activeTemplateId: e.target.value, terms: tmpl?.content ?? f.terms }));
               }}
-              className="h-10 w-full bg-[#111111] border border-[#7F54F5]/30 text-gray-300 rounded-lg px-3 text-sm outline-none focus:ring-2 focus:ring-[#FFCC00]/50 focus:border-[#FFCC00] transition-colors"
+              className="h-10 w-full bg-[#111111] border border-tech-purple/30 text-gray-300 rounded-lg px-3 text-sm outline-none focus:ring-2 focus:ring-liu/50 focus:border-liu transition-colors"
             >
               <option value="">Seleccionar plantilla…</option>
               {termTemplates.map(t => (
@@ -537,7 +537,7 @@ export default function QuotesModule() {
               value={form.terms}
               onChange={e => setField('terms', e.target.value)}
               placeholder="Términos y condiciones de la cotización…"
-              className="w-full bg-[#111111] border border-[#7F54F5]/30 text-gray-100 rounded-lg px-3 py-2 text-sm outline-none placeholder:text-gray-600 focus:ring-2 focus:ring-[#FFCC00]/50 focus:border-[#FFCC00] transition-colors resize-none"
+              className="w-full bg-[#111111] border border-tech-purple/30 text-gray-100 rounded-lg px-3 py-2 text-sm outline-none placeholder:text-gray-600 focus:ring-2 focus:ring-liu/50 focus:border-liu transition-colors resize-none"
             />
           </div>
 
@@ -545,7 +545,7 @@ export default function QuotesModule() {
           <button
             onClick={handleSaveAndDownload}
             disabled={!form.selectedClientId || form.items.length === 0 || generating}
-            className="h-11 w-full rounded-lg bg-[#FD8000] text-white text-sm font-semibold hover:bg-[#E57200] transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="h-11 w-full rounded-lg bg-tech-orange text-white text-sm font-semibold hover:bg-[#E57200] transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             <Download size={15} />
             {generating ? 'Generando PDF…' : 'Guardar y Descargar PDF'}
@@ -565,7 +565,7 @@ export default function QuotesModule() {
               <button
                 onClick={handleSaveAndDownload}
                 disabled={!form.selectedClientId || form.items.length === 0 || generating}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FD8000] text-white text-xs font-semibold rounded-lg hover:bg-[#E57200] transition-colors disabled:opacity-40"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-tech-orange text-white text-xs font-semibold rounded-lg hover:bg-[#E57200] transition-colors disabled:opacity-40"
               >
                 <Download size={12} /> {generating ? '…' : 'Descargar PDF'}
               </button>

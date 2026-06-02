@@ -1,11 +1,14 @@
 // @ts-ignore
-import html2pdf from 'html2pdf.js';
+import _html2pdfModule from 'html2pdf.js';
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { X, Trash2, Check, Plus, ChevronDown, FileText, Download } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../App';
 import { AgencyQuote, QuoteItem, QuoteStatus } from '../../types';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const html2pdf: any = (_html2pdfModule as any).default ?? _html2pdfModule;
 
 // ─── Constants + helpers ──────────────────────────────────────────────────────
 
@@ -227,7 +230,7 @@ export default function QuotesModule() {
             margin: 0,
             filename: `Cotizacion-${safeName}-${form.quoteDate}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true },
+            html2canvas: { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#ffffff' },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
           })
           .from(element)
@@ -577,7 +580,6 @@ export default function QuotesModule() {
                       src={settings.logoUrl}
                       alt="Logo"
                       className="h-14 object-contain mb-1"
-                      crossOrigin="anonymous"
                     />
                   ) : (
                     <div className="h-14 w-14 bg-gray-100 rounded-lg flex items-center justify-center">
@@ -597,21 +599,26 @@ export default function QuotesModule() {
               <div className="bg-gray-50 rounded-lg p-4 mb-6">
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-bold text-gray-900">COTIZACIÓN</h2>
-                  <span className="text-lg font-mono text-gray-600">
+                  <span className="text-base font-mono text-gray-600">
                     {form.number || nextNumber()}
                   </span>
                 </div>
-                <div className="grid grid-cols-3 gap-4 mt-3 text-sm text-gray-500">
+                {selectedClient && (
+                  <p className="text-sm font-semibold text-gray-700 mt-1">
+                    {selectedClient.name}
+                  </p>
+                )}
+                <div className="grid grid-cols-3 gap-4 mt-2 text-[11px] text-gray-500">
                   <div>
-                    <span className="text-xs font-semibold uppercase tracking-wide text-gray-400 block">Fecha</span>
+                    <span className="text-[9px] font-semibold uppercase tracking-wide text-gray-400 block">Fecha</span>
                     {formatDate(form.quoteDate)}
                   </div>
                   <div>
-                    <span className="text-xs font-semibold uppercase tracking-wide text-gray-400 block">Válido hasta</span>
+                    <span className="text-[9px] font-semibold uppercase tracking-wide text-gray-400 block">Válido hasta</span>
                     {form.validUntil ? formatDate(form.validUntil) : '—'}
                   </div>
                   <div>
-                    <span className="text-xs font-semibold uppercase tracking-wide text-gray-400 block">Entrega</span>
+                    <span className="text-[9px] font-semibold uppercase tracking-wide text-gray-400 block">Entrega</span>
                     {form.deliveryDate ? formatDate(form.deliveryDate) : '—'}
                   </div>
                 </div>
@@ -689,11 +696,11 @@ export default function QuotesModule() {
 
               {/* ── Terms ── */}
               {form.terms && (
-                <div className="border-t border-gray-200 pt-6 mb-6">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">
+                <div className="border-t border-gray-100 pt-4 mb-4">
+                  <p className="text-[8px] font-medium uppercase tracking-wider text-gray-300 mb-1">
                     Términos y Condiciones
                   </p>
-                  <p className="text-xs text-gray-500 whitespace-pre-line leading-relaxed">{form.terms}</p>
+                  <p className="text-[9px] text-gray-400 whitespace-pre-line leading-relaxed">{form.terms}</p>
                 </div>
               )}
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import logoLiu from './assets/logo-liu.png';
 import { Outlet, NavLink, useOutletContext } from 'react-router-dom';
 import { Building2, LogOut, X } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
@@ -8,6 +9,7 @@ import { auth, db } from './firebase';
 import Button from './components/ui/Button';
 import Input from './components/ui/Input';
 import LoginPage from './components/auth/LoginPage';
+import { formatRut } from './components/modules/Clients';
 import {
   AgencySettings,
   AgencyCost,
@@ -146,7 +148,9 @@ export default function App() {
 
       if (snap.exists()) {
         const d = snap.data();
-        setSettings(d.settings ?? DEFAULT_SETTINGS);
+        const loadedSettings = { ...DEFAULT_SETTINGS, ...(d.settings ?? {}) };
+        if (!loadedSettings.logoUrl) loadedSettings.logoUrl = DEFAULT_SETTINGS.logoUrl;
+        setSettings(loadedSettings);
         setCosts(d.costs ?? []);
         setServices(d.services ?? []);
         setClients(d.clients ?? []);
@@ -296,11 +300,19 @@ export default function App() {
       {/* ── Header ── */}
       <header className="sticky top-0 z-30 flex items-center gap-4 px-4 h-14 bg-[#0D0D0D] border-b border-[#7F54F5]/20">
         {/* Logo */}
-        <div className="flex items-center gap-2 shrink-0">
-          <div className="w-8 h-8 bg-[#FFCC00] flex items-center justify-center rounded-sm">
-            <span className="text-[#111111] font-black text-xs leading-none tracking-tight">LIU</span>
-          </div>
-          <span className="text-[#FFCC00] font-semibold text-sm">Services 2026</span>
+        <div className="flex items-center shrink-0">
+          {settings.logoUrl ? (
+            <img src={settings.logoUrl} alt="Logo" className="h-8 object-contain" />
+          ) : logoLiu ? (
+            <img src={logoLiu} alt="Logo" className="h-8 object-contain" />
+          ) : (
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-[#FFCC00] flex items-center justify-center rounded-sm">
+                <span className="text-[#111111] font-black text-xs leading-none tracking-tight">LIU</span>
+              </div>
+              <span className="text-[#FFCC00] font-semibold text-sm">Services 2026</span>
+            </div>
+          )}
         </div>
 
         {/* Nav */}
@@ -382,7 +394,7 @@ export default function App() {
           <Input
             label="RUT Empresa"
             value={draft.rut}
-            onChange={e => setDraft(d => ({ ...d, rut: e.target.value }))}
+            onChange={e => setDraft(d => ({ ...d, rut: formatRut(e.target.value) }))}
             placeholder="76.123.456-7"
           />
           <Input

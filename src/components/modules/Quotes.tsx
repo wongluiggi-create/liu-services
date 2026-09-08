@@ -1,5 +1,6 @@
 // @ts-ignore
 import _html2pdfModule from 'html2pdf.js';
+import logoLiu from '../../assets/logo-liu.png';
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { X, Trash2, Check, Plus, ChevronDown, FileText, Download } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,6 +15,15 @@ const html2pdf: any = (_html2pdfModule as any).default ?? _html2pdfModule;
 
 const formatCurrency = (v: number) =>
   new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(v);
+
+const formatRut = (rut: string) => {
+  if (!rut) return '';
+  const clean = rut.replace(/[.\-\s]/g, '').toUpperCase();
+  if (clean.length < 2) return clean;
+  const verifier = clean.slice(-1);
+  const body = clean.slice(0, -1).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return `${body}-${verifier}`;
+};
 
 const formatDate = (s: string) => {
   if (!s) return '—';
@@ -220,24 +230,19 @@ export default function QuotesModule() {
     // Generate PDF
     try {
       const element = document.getElementById('quote-preview');
-      if (element) {
-        const hiddenEls = Array.from(element.querySelectorAll<HTMLElement>('[data-pdf-hide]'));
-        hiddenEls.forEach(el => { el.style.display = 'none'; });
+      if (!element) return;
 
-        const safeName = (selectedClient?.name ?? 'cliente').replace(/\s+/g, '-');
-        await html2pdf()
-          .set({
-            margin: 0,
-            filename: `Cotizacion-${safeName}-${form.quoteDate}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#ffffff' },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-          })
-          .from(element)
-          .save();
-
-        hiddenEls.forEach(el => { el.style.display = ''; });
-      }
+      const safeName = (selectedClient?.name ?? 'cliente').replace(/\s+/g, '-');
+      await html2pdf()
+        .set({
+          margin: 0,
+          filename: `Cotizacion-${safeName}-${form.quoteDate}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, backgroundColor: '#ffffff' },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        })
+        .from(element)
+        .save();
     } finally {
       setGenerating(false);
     }
@@ -553,117 +558,116 @@ export default function QuotesModule() {
         </div>
 
         {/* ══ QUOTE PREVIEW ══ */}
-        <div className="p-4 md:p-6">
+        <div className="p-4 md:p-6 overflow-x-auto">
+
+          {/* Toolbar (solo en pantalla) */}
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500">
+              Vista previa del documento
+            </span>
+            <button
+              onClick={handleSaveAndDownload}
+              disabled={!form.selectedClientId || form.items.length === 0 || generating}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-tech-orange text-white text-xs font-semibold rounded-lg hover:bg-[#E57200] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Download size={12} /> {generating ? 'Generando…' : 'Descargar PDF'}
+            </button>
+          </div>
+
+          {/* ── Documento A4 ── */}
           <div
             id="quote-preview"
-            className="bg-white rounded-xl text-gray-800 overflow-hidden shadow-xl"
-            style={{ fontFamily: 'Inter, sans-serif' }}
+            style={{
+              fontFamily: 'Arial, Helvetica, sans-serif',
+              backgroundColor: '#ffffff',
+              color: '#1a1a1a',
+              width: '794px',
+              minHeight: '1000px',
+              margin: '0 auto',
+              boxShadow: '0 4px 24px rgba(0,0,0,0.18)',
+              borderRadius: '4px',
+              overflow: 'hidden',
+            }}
           >
-            {/* PDF action buttons (hidden in output) */}
-            <div data-pdf-hide className="bg-gray-50 px-6 py-3 flex items-center justify-between border-b border-gray-200">
-              <span className="text-xs text-gray-400 font-mono">VISTA PREVIA DEL DOCUMENTO</span>
-              <button
-                onClick={handleSaveAndDownload}
-                disabled={!form.selectedClientId || form.items.length === 0 || generating}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-tech-orange text-white text-xs font-semibold rounded-lg hover:bg-[#E57200] transition-colors disabled:opacity-40"
-              >
-                <Download size={12} /> {generating ? '…' : 'Descargar PDF'}
-              </button>
-            </div>
+            {/* Franja superior naranja */}
+            <div style={{ backgroundColor: '#FD8000', height: '6px', width: '100%' }} />
 
-            <div className="p-8 md:p-10">
-              {/* ── Preview header ── */}
-              <div className="flex items-start justify-between mb-8">
+            <div style={{ padding: '44px 52px 40px' }}>
+
+              {/* ── CABECERA: logo ← → info agencia ── */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '36px' }}>
                 <div>
-                  {settings.logoUrl ? (
-                    <img
-                      src={settings.logoUrl}
-                      alt="Logo"
-                      className="h-14 object-contain mb-1"
-                    />
+                  <img
+                    src={settings.logoUrl || logoLiu}
+                    alt="Logo"
+                    style={{ height: '56px', objectFit: 'contain', display: 'block' }}
+                  />
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  {settings.agencyName && <p style={{ fontWeight: 700, fontSize: '13px', color: '#111', margin: '0 0 3px' }}>{settings.agencyName}</p>}
+                  {settings.rut        && <p style={{ fontSize: '11px', color: '#666', margin: '1px 0' }}>RUT: {formatRut(settings.rut)}</p>}
+                  {settings.address    && <p style={{ fontSize: '11px', color: '#666', margin: '1px 0' }}>{settings.address}</p>}
+                  {settings.email      && <p style={{ fontSize: '11px', color: '#666', margin: '1px 0' }}>{settings.email}</p>}
+                </div>
+              </div>
+
+              {/* ── TÍTULO COTIZACIÓN + N° + FECHAS ── */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: '2px solid #FD8000', paddingBottom: '14px', marginBottom: '28px' }}>
+                <div>
+                  <h1 style={{ fontSize: '26px', fontWeight: 900, letterSpacing: '-0.5px', color: '#111', margin: '0 0 2px' }}>COTIZACIÓN</h1>
+                  <p style={{ fontSize: '13px', color: '#888', fontFamily: 'monospace', margin: 0 }}>N° {form.number || nextNumber()}</p>
+                </div>
+                <div style={{ textAlign: 'right', fontSize: '12px', color: '#555', lineHeight: '1.7' }}>
+                  <p style={{ margin: 0 }}><strong style={{ color: '#444' }}>Fecha:</strong> {formatDate(form.quoteDate)}</p>
+                  {form.validUntil   && <p style={{ margin: 0 }}><strong style={{ color: '#444' }}>Válido hasta:</strong> {formatDate(form.validUntil)}</p>}
+                  {form.deliveryDate && <p style={{ margin: 0 }}><strong style={{ color: '#444' }}>Entrega:</strong> {formatDate(form.deliveryDate)}</p>}
+                </div>
+              </div>
+
+              {/* ── BLOQUE PARA ── */}
+              <div style={{ marginBottom: '32px' }}>
+                <div style={{ padding: '16px 18px', backgroundColor: '#fafafa', borderRadius: '6px', borderLeft: '3px solid #FD8000' }}>
+                  <p style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.2px', color: '#bbb', margin: '0 0 8px' }}>Para</p>
+                  {selectedClient ? (
+                    <>
+                      <p style={{ fontWeight: 700, fontSize: '14px', color: '#111', margin: '0 0 4px' }}>{selectedClient.name}</p>
+                      {selectedClient.rut     && <p style={{ fontSize: '11px', color: '#666', margin: '2px 0' }}>RUT: {formatRut(selectedClient.rut)}</p>}
+                      {selectedClient.email   && <p style={{ fontSize: '11px', color: '#666', margin: '2px 0' }}>{selectedClient.email}</p>}
+                      {selectedClient.address && <p style={{ fontSize: '11px', color: '#666', margin: '2px 0' }}>{selectedClient.address}</p>}
+                    </>
                   ) : (
-                    <div className="h-14 w-14 bg-gray-100 rounded-lg flex items-center justify-center">
-                      <span className="text-gray-400 text-xs">Logo</span>
-                    </div>
+                    <p style={{ fontSize: '12px', color: '#bbb', fontStyle: 'italic', margin: 0 }}>Sin cliente seleccionado</p>
                   )}
                 </div>
-                <div className="text-right">
-                  <h1 className="text-lg font-bold text-gray-900">{settings.agencyName || 'Liu Agency'}</h1>
-                  {settings.rut && <p className="text-sm text-gray-500">RUT: {settings.rut}</p>}
-                  {settings.address && <p className="text-sm text-gray-500">{settings.address}</p>}
-                  {settings.email && <p className="text-sm text-gray-500">{settings.email}</p>}
-                </div>
               </div>
 
-              {/* ── Quote title block ── */}
-              <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-bold text-gray-900">COTIZACIÓN</h2>
-                  <span className="text-base font-mono text-gray-600">
-                    {form.number || nextNumber()}
-                  </span>
-                </div>
-                {selectedClient && (
-                  <p className="text-sm font-semibold text-gray-700 mt-1">
-                    {selectedClient.name}
-                  </p>
-                )}
-                <div className="grid grid-cols-3 gap-4 mt-2 text-[11px] text-gray-500">
-                  <div>
-                    <span className="text-[9px] font-semibold uppercase tracking-wide text-gray-400 block">Fecha</span>
-                    {formatDate(form.quoteDate)}
-                  </div>
-                  <div>
-                    <span className="text-[9px] font-semibold uppercase tracking-wide text-gray-400 block">Válido hasta</span>
-                    {form.validUntil ? formatDate(form.validUntil) : '—'}
-                  </div>
-                  <div>
-                    <span className="text-[9px] font-semibold uppercase tracking-wide text-gray-400 block">Entrega</span>
-                    {form.deliveryDate ? formatDate(form.deliveryDate) : '—'}
-                  </div>
-                </div>
-              </div>
-
-              {/* ── Client block ── */}
-              {selectedClient ? (
-                <div className="mb-6">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">Para:</p>
-                  <p className="font-bold text-gray-900 text-base">{selectedClient.name}</p>
-                  {selectedClient.rut && <p className="text-sm text-gray-500">RUT: {selectedClient.rut}</p>}
-                  {selectedClient.email && <p className="text-sm text-gray-500">{selectedClient.email}</p>}
-                  {selectedClient.address && <p className="text-sm text-gray-500">{selectedClient.address}</p>}
-                </div>
-              ) : (
-                <div className="mb-6 h-20 border-2 border-dashed border-gray-200 rounded-lg flex items-center justify-center">
-                  <p className="text-gray-400 text-sm">Selecciona un cliente para ver los datos aquí</p>
-                </div>
-              )}
-
-              {/* ── Services table ── */}
+              {/* ── TABLA DE SERVICIOS ── */}
               {form.items.length > 0 ? (
-                <table className="w-full mb-6 text-sm">
+                <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '28px', fontSize: '12px' }}>
                   <thead>
-                    <tr className="border-b-2 border-gray-200">
-                      <th className="text-left py-2 text-gray-600 font-semibold">Descripción</th>
-                      <th className="text-right py-2 text-gray-600 font-semibold w-32">P. Unitario</th>
-                      <th className="text-right py-2 text-gray-600 font-semibold w-16">Cant.</th>
-                      <th className="text-right py-2 text-gray-600 font-semibold w-28">Total</th>
+                    <tr style={{ backgroundColor: '#111111', color: '#ffffff' }}>
+                      <th style={{ padding: '10px 14px', textAlign: 'left', fontWeight: 600, fontSize: '11px', letterSpacing: '0.3px' }}>Descripción</th>
+                      <th style={{ padding: '10px 14px', textAlign: 'right', fontWeight: 600, fontSize: '11px', width: '130px' }}>P. Unitario</th>
+                      <th style={{ padding: '10px 14px', textAlign: 'right', fontWeight: 600, fontSize: '11px', width: '60px' }}>Cant.</th>
+                      <th style={{ padding: '10px 14px', textAlign: 'right', fontWeight: 600, fontSize: '11px', width: '120px' }}>Total</th>
                     </tr>
                   </thead>
                   <tbody>
                     {form.items.map((item, i) => (
-                      <tr key={item.localId} className={i % 2 === 0 ? 'bg-gray-50/50' : ''}>
-                        <td className="py-2.5 pr-3">
-                          <p className="font-medium text-gray-800">{item.name}</p>
+                      <tr key={item.localId} style={{ backgroundColor: i % 2 === 0 ? '#fafafa' : '#ffffff', borderBottom: '1px solid #eeeeee' }}>
+                        <td style={{ padding: '11px 14px', verticalAlign: 'top' }}>
+                          <p style={{ fontWeight: 600, color: '#1a1a1a', margin: 0 }}>{item.name}</p>
                           {item.description && (
-                            <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{item.description}</p>
+                            <p style={{ fontSize: '10px', color: '#888', margin: '3px 0 0', lineHeight: '1.5' }}>{item.description}</p>
                           )}
                         </td>
-                        <td className="py-2.5 text-right text-gray-600 tabular-nums">
+                        <td style={{ padding: '11px 14px', textAlign: 'right', color: '#555', verticalAlign: 'top', fontVariantNumeric: 'tabular-nums' }}>
                           {formatCurrency(item.price)}
                         </td>
-                        <td className="py-2.5 text-right text-gray-600 tabular-nums">{item.quantity}</td>
-                        <td className="py-2.5 text-right font-semibold text-gray-800 tabular-nums">
+                        <td style={{ padding: '11px 14px', textAlign: 'right', color: '#555', verticalAlign: 'top' }}>
+                          {item.quantity}
+                        </td>
+                        <td style={{ padding: '11px 14px', textAlign: 'right', fontWeight: 700, color: '#1a1a1a', verticalAlign: 'top', fontVariantNumeric: 'tabular-nums' }}>
                           {formatCurrency(item.price * item.quantity)}
                         </td>
                       </tr>
@@ -671,43 +675,46 @@ export default function QuotesModule() {
                   </tbody>
                 </table>
               ) : (
-                <div className="mb-6 h-24 border-2 border-dashed border-gray-200 rounded-lg flex items-center justify-center">
-                  <p className="text-gray-400 text-sm">Agrega servicios para visualizar la tabla</p>
+                <div style={{ border: '2px dashed #e5e5e5', borderRadius: '8px', height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '28px' }}>
+                  <p style={{ color: '#bbb', fontSize: '13px', margin: 0 }}>Agrega servicios para visualizar la tabla</p>
                 </div>
               )}
 
-              {/* ── Totals ── */}
-              <div className="flex justify-end mb-8">
-                <div className="w-52 flex flex-col gap-1.5">
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>Subtotal:</span>
-                    <span className="tabular-nums">{formatCurrency(subtotal)}</span>
+              {/* ── TOTALES ── */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '36px' }}>
+                <div style={{ width: '260px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid #eeeeee', fontSize: '13px', color: '#666' }}>
+                    <span>Subtotal</span>
+                    <span style={{ fontVariantNumeric: 'tabular-nums' }}>{formatCurrency(subtotal)}</span>
                   </div>
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>IVA (19%):</span>
-                    <span className="tabular-nums">{formatCurrency(tax)}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid #eeeeee', fontSize: '13px', color: '#666' }}>
+                    <span>IVA (19%)</span>
+                    <span style={{ fontVariantNumeric: 'tabular-nums' }}>{formatCurrency(tax)}</span>
                   </div>
-                  <div className="flex justify-between text-base font-bold text-gray-900 border-t-2 border-gray-200 pt-2 mt-0.5">
-                    <span>Total con IVA:</span>
-                    <span className="tabular-nums">{formatCurrency(totalWithIVA)}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 14px', marginTop: '6px', backgroundColor: '#111111', borderRadius: '6px', fontSize: '15px', fontWeight: 800, color: '#ffffff' }}>
+                    <span>Total con IVA</span>
+                    <span style={{ fontVariantNumeric: 'tabular-nums' }}>{formatCurrency(totalWithIVA)}</span>
                   </div>
                 </div>
               </div>
 
-              {/* ── Terms ── */}
+              {/* ── TÉRMINOS Y CONDICIONES ── */}
               {form.terms && (
-                <div className="border-t border-gray-100 pt-4 mb-4">
-                  <p className="text-[8px] font-medium uppercase tracking-wider text-gray-300 mb-1">
+                <div style={{ borderTop: '1px solid #eeeeee', paddingTop: '18px', marginBottom: '24px' }}>
+                  <p style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.2px', color: '#bbb', margin: '0 0 8px' }}>
                     Términos y Condiciones
                   </p>
-                  <p className="text-[9px] text-gray-400 whitespace-pre-line leading-relaxed">{form.terms}</p>
+                  <p style={{ fontSize: '10px', color: '#888', lineHeight: '1.3', whiteSpace: 'pre-line', margin: 0 }}>
+                    {form.terms}
+                  </p>
                 </div>
               )}
 
-              {/* ── Footer ── */}
-              <div className="border-t border-gray-200 pt-4 text-center text-xs text-gray-400">
-                {[settings.agencyName, settings.email, settings.address].filter(Boolean).join(' · ')}
+              {/* ── PIE DE PÁGINA ── */}
+              <div style={{ borderTop: '2px solid #FD8000', paddingTop: '14px', textAlign: 'center', fontSize: '11px', color: '#aaa' }}>
+                {[settings.agencyName, settings.email, settings.address].filter(Boolean).join('  ·  ')}
               </div>
+
             </div>
           </div>
         </div>

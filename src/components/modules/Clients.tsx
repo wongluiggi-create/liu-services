@@ -47,7 +47,7 @@ function getInitials(name: string): string {
   return name.trim().split(/\s+/).slice(0, 2).map(w => w[0]?.toUpperCase() ?? '').join('');
 }
 
-function formatRut(value: string): string {
+export function formatRut(value: string): string {
   const clean = value.replace(/[^0-9kK]/g, '').toUpperCase();
   if (clean.length <= 1) return clean;
   const dv = clean.slice(-1);

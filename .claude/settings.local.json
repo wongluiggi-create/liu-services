@@ -19,7 +19,26 @@
       "Bash(gh repo *)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\wongl\\\\Documents\\\\liu-services\" -Recurse -Directory)",
       "Bash(Select-Object -First 30)",
-      "Bash(Format-List FullName)"
+      "Bash(Format-List FullName)",
+      "WebFetch(domain:liucreativo.cl)",
+      "Read(//c/Users/wongl/.claude/skills/notebooklm/**)",
+      "Bash(python scripts/nlm.py list)",
+      "Bash(python scripts/nlm.py ask \"¿Qué es Kontenda? Explica su propósito, propuesta de valor, para quién está dirigido y cuál es su misión.\" --notebook-id e19eb633-2211-4aae-93c4-3523a0d6d6d9)",
+      "Bash(python scripts/nlm.py sources --notebook-id e19eb633-2211-4aae-93c4-3523a0d6d6d9)",
+      "Bash(python scripts/nlm.py ask \"¿Cuáles son todas las funcionalidades de Kontenda? Describe módulos, características, flujo de trabajo y cómo interactúan los roles \\(admin y cliente\\).\" --notebook-id e19eb633-2211-4aae-93c4-3523a0d6d6d9)",
+      "Bash(python scripts/nlm.py ask \"¿Qué tecnología usa Kontenda? Stack técnico, base de datos, autenticación, herramientas. También describe los planes, precios o estructura comercial si existe.\" --notebook-id e19eb633-2211-4aae-93c4-3523a0d6d6d9)",
+      "Bash(python scripts/nlm.py create \"Liu Creativo — Base de Conocimiento\")",
+      "Bash(python scripts/nlm.py add-source --notebook-id 2b95e28c-e82f-42e8-940c-4e39a01cf7e7 --file \"C:\\\\Users\\\\wongl\\\\Documents\\\\liu-services\\\\docs\\\\reporte-liu-creativo.md\")",
+      "Bash(python scripts/nlm.py add-source --notebook-id 2b95e28c-e82f-42e8-940c-4e39a01cf7e7 --file \"C:\\\\Users\\\\wongl\\\\Documents\\\\liu-services\\\\docs\\\\guia-de-uso.md\")",
+      "Bash(python scripts/nlm.py add-source --notebook-id 2b95e28c-e82f-42e8-940c-4e39a01cf7e7 --file \"C:\\\\Users\\\\wongl\\\\Documents\\\\liu-services\\\\docs\\\\documentacion-tecnica.md\")",
+      "Bash(python scripts/nlm.py add-source --notebook-id 2b95e28c-e82f-42e8-940c-4e39a01cf7e7 --file \"C:\\\\Users\\\\wongl\\\\Documents\\\\liu-services\\\\docs\\\\contenido-carousel.md\")",
+      "Bash(python scripts/nlm.py add-source --notebook-id 2b95e28c-e82f-42e8-940c-4e39a01cf7e7 --url \"https://liucreativo.cl\")",
+      "Bash(python scripts/nlm.py library-add --notebook-id 2b95e28c-e82f-42e8-940c-4e39a01cf7e7 --name \"liu-creativo\" --description \"Base de conocimiento completa de Liu Creativo: identidad de marca, servicios, precios, ecosistema de plataformas \\(liucreativo.cl + Kontenda + Liu Services\\)\")",
+      "PowerShell($env:PYTHONUTF8=\"1\"; cd \"C:\\\\Users\\\\wongl\\\\.claude\\\\skills\\\\notebooklm\"; python scripts/nlm.py library-add --notebook-id 2b95e28c-e82f-42e8-940c-4e39a01cf7e7 --name \"liu-creativo\" --description \"Base de conocimiento de Liu Creativo: marca, servicios, Kontenda y Liu Services\")",
+      "PowerShell(Start-Process \"http://localhost:5173/quotes\")",
+      "Bash(python scripts/nlm.py create \"Liu Services - Documentación\")",
+      "Bash(python scripts/nlm.py sources --notebook-id 5b77975e-f753-4953-959b-8eb19cf2a4b4)",
+      "Bash(curl -L \"https://liucreativo.cl/wp-content/uploads/2026/04/Logo-2.png\" -o \"C:\\\\Users\\\\wongl\\\\Documents\\\\liu-services\\\\public\\\\logo-liu.png\")"
     ]
   }
 }
